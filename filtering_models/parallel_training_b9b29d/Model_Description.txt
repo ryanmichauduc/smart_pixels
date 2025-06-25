@@ -1,0 +1,5 @@
+Model 1:
+	y_local_layer: [3, 1]
+	z_global_layer: [3, 1]
+	classification_layer: [3, 1]
+
