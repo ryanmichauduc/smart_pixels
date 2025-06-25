@@ -132,6 +132,7 @@ class OptimizedDataGenerator(tf.keras.utils.Sequence):
             len_xy, ntime = 13*21, 20
             idx = [[i*(len_xy),(i+1)*(len_xy)] for i in range(ntime)] # 20 time stamps of length 13*21
             self.time_stamps = np.array([ np.arange(idx[i][0], idx[i][1]).astype("str") for i in self.time_stamps]).flatten().tolist()
+            print(f"lenght time stamps {len(time_stamps)} and input shape thing {input_shape[0]}")
             if time_stamps != -1 and data_format != '2D':
                 assert len(time_stamps) == input_shape[0]
 
@@ -184,8 +185,10 @@ class OptimizedDataGenerator(tf.keras.utils.Sequence):
             hit_time_df = pd.DataFrame()
             hit_time_30_df = pd.DataFrame()
             hit_time_60_df = pd.DataFrame()
-
+            # print("Please!!!!")
+            # print(self.recon_files)
             for file in self.recon_files:
+                # print("GAAAAAA")
                 tempDf = pd.read_parquet(file, columns=self.time_stamps)
                 recon_df = pd.concat([recon_df,tempDf])
 
@@ -257,9 +260,9 @@ class OptimizedDataGenerator(tf.keras.utils.Sequence):
             z_locs = z_loc_df_raw.values/65
             eh_pairs = eh_pairs_raw.values/150000 # Scale better here
 
-            # This does nothing. Remove
-            y_profiles=y_profiles.reshape((-1,13))
-            x_profiles=x_profiles.reshape((-1,21))
+            # # This does nothing. Remove
+            # y_profiles=y_profiles.reshape((-1,13))
+            # x_profiles=x_profiles.reshape((-1,21))
 
             # Save the labels 
             self.labels = labels_df_raw.values

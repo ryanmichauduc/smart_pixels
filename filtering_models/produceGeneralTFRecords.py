@@ -7,20 +7,22 @@ import sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir) 
 import OptimizedDataGenerator4 as ODG
+import tensorflow as tf
+tf.config.set_visible_devices([], 'GPU')
 
 # Make general tf records directory
-batch_size = 2000
-directory_name = f'filtering_records{batch_size}test'
-data_directory_path = "/home/elizahoward/MuonColliderSim/Simulation_Output/"
+batch_size = 3000
+directory_name = f'../tf_records{batch_size}DanielWith20Timing'
+data_directory_path = "/local/d1/smartpixML/MuonColliderSim/Simulation_Output/"
 is_directory_recursive = False
 file_type = "parquet"
 data_format = "3D" # can't get 2D working
 normalization = 1
 file_fraction = .8 # fraction of files used for training
 to_standardize = False
-input_shape = (1,13, 21) # dimension of 3D cluster
+input_shape = (20,13, 21) # dimension of 3D cluster
 transpose=(0, 2, 3, 1) # not sure what this does 
-time_stamps=[19] # last timestamp is 19
+time_stamps=list(range(20)) # last timestamp is 19
 x_feature_description = "all"
 filteringBIB = True
 
@@ -67,7 +69,8 @@ total_files = len(glob.glob(
             recursive=is_directory_recursive
             ))
 file_count = round(file_fraction*total_files)
-
+print(f"training file count: {file_count}")
+print(f"validation file count: {total_files-file_count}")
 start_time = time.time()
 training_generator = ODG.OptimizedDataGenerator(
                 data_directory_path = data_directory_path,
@@ -84,6 +87,7 @@ training_generator = ODG.OptimizedDataGenerator(
                 tf_records_dir = tf_dir_train,
                 x_feature_description=x_feature_description,
                 filteringBIB=filteringBIB,
+                load_records=False,
             )
 print("--- Training generator %s seconds ---" % (time.time() - start_time))
 
@@ -104,5 +108,6 @@ validation_generator = ODG.OptimizedDataGenerator(
                 tf_records_dir = tf_dir_validation,
                 x_feature_description=x_feature_description,
                 filteringBIB=filteringBIB,
+                load_records=False,
             )
 print("--- Validation generator %s seconds ---" % (time.time() - start_time))
