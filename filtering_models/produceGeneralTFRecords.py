@@ -11,7 +11,7 @@ import tensorflow as tf
 tf.config.set_visible_devices([], 'GPU')
 
 # Make general tf records directory
-batch_size = 3000
+batch_size = 3000 ## powers of 2, ceiling 8192
 directory_name = f'../tf_records{batch_size}DanielWith20Timing'
 data_directory_path = "/local/d1/smartpixML/MuonColliderSim/Simulation_Output/"
 is_directory_recursive = False
